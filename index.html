@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RR Partial Profit Calculator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#f8fafc;
+    --card:#ffffff;
+    --border:#e5e7eb;
+    --text:#020617;
+    --sub:#475569;
+}
+
+.dark{
+    --bg:#0f172a;
+    --card:#020617;
+    --border:#1e293b;
+    --text:#ffffff;
+    --sub:#cbd5f5;
+}
+
+*{
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    transition:.3s;
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:40px;
+    border-radius:18px;
+    width:380px;
+    box-shadow:0 10px 40px rgba(0,0,0,.1);
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+h1{
+    font-size:20px;
+    font-weight:600;
+    color:#38bdf8;
+}
+
+/* Toggle Switch */
+.switch{
+    position:relative;
+    display:inline-block;
+    width:50px;
+    height:26px;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+    cursor:pointer;
+    top:0; left:0; right:0; bottom:0;
+    background:#cbd5f5;
+    transition:.3s;
+    border-radius:30px;
+}
+
+.slider:before{
+    position:absolute;
+    content:"";
+    height:20px;
+    width:20px;
+    left:3px;
+    bottom:3px;
+    background:white;
+    transition:.3s;
+    border-radius:50%;
+}
+
+input:checked + .slider{
+    background:#38bdf8;
+}
+
+input:checked + .slider:before{
+    transform:translateX(24px);
+}
+
+/* Inputs */
+label{
+    font-size:13px;
+    color:var(--sub);
+}
+
+input[type="number"]{
+    width:100%;
+    padding:12px;
+    margin-top:5px;
+    margin-bottom:20px;
+    background:transparent;
+    border:1px solid var(--border);
+    border-radius:8px;
+    color:var(--text);
+    font-size:15px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    background:#38bdf8;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    color:#020617;
+}
+
+.result{
+    margin-top:25px;
+    border:1px solid var(--border);
+    padding:20px;
+    border-radius:12px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+    font-size:14px;
+}
+
+.highlight{
+    color:#38bdf8;
+    font-weight:600;
+    font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="header">
+        <h1>RR Calculator</h1>
+        <label class="switch">
+            <input type="checkbox" onclick="toggleDark()">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <label>Trading Capital ($)</label>
+    <input type="number" id="capital" placeholder="e.g. 1000">
+
+    <label>Risk per Trade (%)</label>
+    <input type="number" id="risk" placeholder="e.g. 0.5">
+
+    <button onclick="calculate()">Calculate Profit</button>
+
+    <div class="result" id="result" style="display:none;">
+        <div class="row"><span>Total Risk</span><span id="riskAmount"></span></div>
+        <div class="row"><span>Profit at 1R (50%)</span><span id="p1"></span></div>
+        <div class="row"><span>Profit at 3R (50%)</span><span id="p3"></span></div>
+        <hr style="border-color:var(--border); margin:15px 0;">
+        <div class="row highlight"><span>Total Profit</span><span id="total"></span></div>
+        <div class="row"><span>Effective RR</span><span>1 : 2</span></div>
+    </div>
+</div>
+
+<script>
+function toggleDark(){
+    document.body.classList.toggle("dark");
+}
+
+function calculate(){
+    const capital = parseFloat(document.getElementById("capital").value);
+    const risk = parseFloat(document.getElementById("risk").value);
+
+    if(!capital || !risk){
+        alert("Enter valid numbers");
+        return;
+    }
+
+    const totalRisk = capital * (risk/100);
+    const half = totalRisk / 2;
+
+    const p1 = half * 1;
+    const p3 = half * 3;
+    const total = p1 + p3;
+
+    document.getElementById("riskAmount").innerText = "$" + totalRisk.toFixed(2);
+    document.getElementById("p1").innerText = "$" + p1.toFixed(2);
+    document.getElementById("p3").innerText = "$" + p3.toFixed(2);
+    document.getElementById("total").innerText = "$" + total.toFixed(2);
+
+    document.getElementById("result").style.display="block";
+}
+</script>
+
+</body>
+</html>
